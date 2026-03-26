@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fortune Cookie Fali</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fff4d6, #ffd7a8);
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      width: 100%;
+      max-width: 900px;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 16px;
+      color: #5b3716;
+    }
+
+    p.subtitle {
+      font-size: 1rem;
+      margin-bottom: 30px;
+      color: #7a5430;
+    }
+
+    .cookie-area {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cookie {
+      width: 260px;
+      height: 200px;
+      background: #d49347;
+      border-radius: 55% 55% 50% 50%;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.25s ease;
+      box-shadow: 0 16px 30px rgba(0,0,0,0.15);
+    }
+
+    .cookie:hover {
+      transform: scale(1.05);
+    }
+
+    .cookie::before,
+    .cookie::after {
+      content: "";
+      position: absolute;
+      background: #c78438;
+      border-radius: 50%;
+    }
+
+    .cookie::before {
+      width: 120px;
+      height: 80px;
+      top: 55px;
+      left: 25px;
+      transform: rotate(-18deg);
+    }
+
+    .cookie::after {
+      width: 110px;
+      height: 75px;
+      top: 60px;
+      right: 25px;
+      transform: rotate(18deg);
+    }
+
+    .cookie.open {
+      animation: shake 0.4s ease;
+    }
+
+    .half {
+      position: absolute;
+      width: 120px;
+      height: 150px;
+      background: #d49347;
+      top: 90px;
+      opacity: 0;
+      border-radius: 50% 50% 40% 40%;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.1);
+    }
+
+    .left-half {
+      left: 50px;
+      transform: rotate(-20deg);
+    }
+
+    .right-half {
+      right: 50px;
+      transform: rotate(20deg);
+    }
+
+    .cookie-area.cracked .cookie {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .cookie-area.cracked .left-half,
+    .cookie-area.cracked .right-half {
+      opacity: 1;
+      transition: transform 0.8s ease, opacity 0.4s ease;
+    }
+
+    .cookie-area.cracked .left-half {
+      transform: translateX(-55px) rotate(-42deg);
+    }
+
+    .cookie-area.cracked .right-half {
+      transform: translateX(55px) rotate(42deg);
+    }
+
+    .paper {
+      position: absolute;
+      width: 250px;
+      min-height: 90px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      left: 50%;
+      top: 125px;
+      transform: translateX(-50%) scale(0.4);
+      opacity: 0;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.16);
+      transition: all 0.7s ease;
+      color: #50351e;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .cookie-area.cracked .paper {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    .mobile-crack-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #8b4f19;
+      color: white;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    #crackBtn {
+      min-width: 190px;
+      font-weight: bold;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      opacity: 0.92;
+    }
+
+    @keyframes shake {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(4deg); }
+      50% { transform: rotate(-4deg); }
+      75% { transform: rotate(2deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 1.9rem;
+      }
+
+      .cookie-area {
+        width: 260px;
+        height: 280px;
+      }
+
+      .cookie {
+        width: 210px;
+        height: 160px;
+      }
+
+      .paper {
+        width: 210px;
+        font-size: 0.95rem;
+        top: 120px;
+      }
+
+      button {
+        width: 100%;
+        max-width: 260px;
+      }
+
+      .buttons {
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Fortune Cookie Fali</h1>
+    <p class="subtitle">Kurabiyeye tikla, kirilsin, falin ortaya ciksin.</p>
+
+    <div class="cookie-area" id="cookieArea">
+      <div class="cookie" id="cookie"></div>
+      <div class="half left-half"></div>
+      <div class="half right-half"></div>
+      <div class="paper" id="paper">Fal burada gorunecek.</div>
+    </div>
+
+    <div class="mobile-crack-wrap">
+      <button id="crackBtn">Kurabiyeyi Kir</button>
+    </div>
+
+    <div class="buttons">
+      <button id="resetBtn">Yeniden Kapat</button>
+      <button id="newFortuneBtn">Yeni Fal Hazirla</button>
+    </div>
+  </div>
+
+  <script>
+    const fortunes = [
+      "Bugun kucuk bir sans buyuk kapi acacak.",
+      "Bekledigin haber dusundugonden yakin.",
+      "Bir konuda fazla dusunuyorsun, biraz hareket et.",
+      "Dogru kisi degilse, dogru enerji de degildir.",
+      "Bu hafta surpriz bir firsat goreceksin.",
+      "Sabirli kalirsan elindeki sey buyuyecek.",
+      "Komik baslayan bir sey ciddilesebilir.",
+      "Yeni bir baslangic icin once eski yuku birakman gerek.",
+      "Sans senden nefret etmiyor, sen kararsizsin.",
+      "Yakinda seni guldurecek bir mesaj alacaksin."
+    ];
+
+    const cookieArea = document.getElementById("cookieArea");
+    const cookie = document.getElementById("cookie");
+    const paper = document.getElementById("paper");
+    const resetBtn = document.getElementById("resetBtn");
+    const newFortuneBtn = document.getElementById("newFortuneBtn");
+    const crackBtn = document.getElementById("crackBtn");
+
+    let currentFortune = getRandomFortune();
+    paper.textContent = currentFortune;
+
+    function getRandomFortune() {
+      const randomIndex = Math.floor(Math.random() * fortunes.length);
+      return fortunes[randomIndex];
+    }
+
+    function crackCookie() {
+      if (cookieArea.classList.contains("cracked")) {
+        return;
+      }
+
+      cookie.classList.add("open");
+      setTimeout(() => {
+        cookieArea.classList.add("cracked");
+      }, 250);
+    }
+
+    cookie.addEventListener("click", crackCookie);
+    crackBtn.addEventListener("click", crackCookie);
+
+    resetBtn.addEventListener("click", () => {
+      cookieArea.classList.remove("cracked");
+      cookie.classList.remove("open");
+    });
+
+    newFortuneBtn.addEventListener("click", () => {
+      currentFortune = getRandomFortune();
+      paper.textContent = currentFortune;
+      cookieArea.classList.remove("cracked");
+      cookie.classList.remove("open");
+    });
+  </script>
+</body>
+</html>
